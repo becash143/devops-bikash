@@ -1,0 +1,75 @@
+---
+# This playbook knows how to install postgres and its related extensions on Ubuntu
+
+- hosts: localhost
+  sudo: yes
+  roles:
+    - { role: packages_ubuntu }
+    - { role: postgres}
+      #- {role: znzj.rbenv}
+    #Uncomment if you want to install pgtap too:
+    #- { role: pgtap}---
+    #  - gem_path: "~/.rbenv/shims/gem"
+  tasks:
+          #  - apt_repository: repo=ppa:chris-lea/node.js
+      #    - apt: update_cache=yes
+      #  - apt: name=nodejs
+      #   - apt: name=vim
+  vars:
+    ruby_version: 2.5.0
+  tasks:
+    - name: Install required packages
+      apt: pkg={{item}} state=installed
+      with_items:
+        - build-essential
+        - libssl-dev
+        - zlib1g-dev
+        - libreadline-dev
+        - libyaml-dev
+        - git-core
+
+    - name: Remove system Ruby
+      file: path=/opt/vagrant_ruby
+            state=absent
+
+    - name: Create src directory
+      file: path=/usr/local/src
+            state=directory
+
+    - name: Download Ruby {{ ruby_version }}
+      get_url: url=http://ftp.ruby-lang.org/pub/ruby/ruby-{{ ruby_version }}.tar.gz
+               dest=/usr/local/src/ruby.tgz
+
+    - name: Expand Ruby
+      command: chdir=/usr/local/src
+               tar zxf ruby.tgz
+               creates=/usr/local/src/ruby-{{ ruby_version }}
+
+    - name: Build Ruby
+      command: chdir=/usr/local/src/ruby-{{ ruby_version }}
+               {{ item }}
+      with_items:
+        - ./configure --disable-install-rdoc
+        - make
+        - sudo make install
+
+    - name: Update Rubygems
+      command: gem update --system
+
+    - name: Copy no-documentation gemrc
+      copy: src=files/gemrc
+            dest=/etc/gemrc
+
+    - name: Install Bundler
+      gem: name=bundler
+           state=present
+    - name: Execute the command in remote shell; stdout goes to the specified file on the remote.
+      shell: /tmp/test.sh >> /tmp/somelog.txt       
+    - name: This command installs Ruby on remote Server       
+      command: chdir=/tmp/ruby
+                {{ item }}
+      with_items:
+               #         - bundle update --bundler
+#         - /tmp/ruby/bin/rails db:setup > /dev/null
+       - bin/rails server 
+
