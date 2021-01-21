@@ -1,0 +1,5 @@
+SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
+SPRING_DATASOURCE_DRIVERCLASSNAME=com.mysql.cj.jdbc.Driver
+SPRING_DATASOURCE_URL=jdbc:mysql://mysql-service/assignment?allowPublicKeyRetrieval=true
+SPRING_DATASOURCE_USERNAME=root
+MYSQL_ROOT_HOST='%'

@@ -1,0 +1,40 @@
+version: "3.7"
+services:
+  mysql-service:
+    restart: always
+    container_name: docker-mysql
+    image: mysql:8.0
+    env_file:
+       - ./.env      
+    environment:
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}    
+    ports:
+      - 3306:3306
+    networks:
+      - spring-boot-mysql-network      
+  web-service:
+    image: bikclu/myapplication:200908-91ba4d8
+    env_file:
+      - ./.env      
+    container_name: myapp
+    user: myapp
+    ports:
+      - "8090:8090"
+    networks:
+      - spring-boot-mysql-network
+    environment:
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=${DB_DIALECT}     
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=${DB_DRIVER}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-service:3306/assignment?allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=${DB_USERNAME}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      - mysql-service
+volumes:
+  data:
+    driver: local
+        
+networks:
+  spring-boot-mysql-network:
+    driver: bridge

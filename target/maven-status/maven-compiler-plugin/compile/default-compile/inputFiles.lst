@@ -1,0 +1,6 @@
+/usr/src/mymaven/src/main/java/com/progressoft/devops/assignment/controller/PersonController.java
+/usr/src/mymaven/src/main/java/com/progressoft/devops/assignment/repository/PersonRepository.java
+/usr/src/mymaven/src/main/java/com/progressoft/devops/assignment/Application.java
+/usr/src/mymaven/src/main/java/com/progressoft/devops/assignment/controller/Person.java
+/usr/src/mymaven/src/main/java/com/progressoft/devops/assignment/controller/PersonMapper.java
+/usr/src/mymaven/src/main/java/com/progressoft/devops/assignment/repository/PersonEntity.java

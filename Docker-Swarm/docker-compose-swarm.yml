@@ -1,0 +1,38 @@
+version: "3.3"
+services:
+  mysql:
+    restart: always
+    secrets:
+     - my_db_secret
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: assignment
+      MYSQL_ROOT_PASSWORD: /run/secrets/my_db_secret
+
+    ports:
+      - 3306:3306
+    networks: 
+      - dbcvbnmnm,-network   
+  web-service:
+    image: bikclu/myapplication:200908-91ba4d8
+    secrets:
+     - my_db_secret
+    user: myapp
+    ports:
+      - "8090:8090"
+    networks: 
+      - db-network  
+    environment:
+      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect     
+      - SPRING_DATASOURCE_DRIVER-CLASS-NAME=com.mysql.cj.jdbc.Driver
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/assignment?allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=/run/secrets/my_db_secret
+    depends_on:
+      - mysql
+networks:
+  db-network:
+    external: true     
+secrets:
+  my_db_secret:
+    external: true      

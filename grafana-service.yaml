@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: grafana
+    meta.helm.sh/release-namespace: default
+  creationTimestamp: "2020-08-30T07:16:36Z"
+  labels:
+    app.kubernetes.io/instance: grafana
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: grafana
+    app.kubernetes.io/version: 7.1.1
+    helm.sh/chart: grafana-5.5.5
+  name: grafana-service
+  namespace: default
+  resourceVersion: "131502"
+  selfLink: /api/v1/namespaces/default/services/grafana
+  uid: f95c7567-9ef1-4aea-a292-54bcc6da092b
+spec:
+  type: NodePort
+  ports:
+  - port: 3000
+    targetPort: 3000
+    protocol: TCP
+    name: grafana
+  selector:
+    app.kubernetes.io/instance: grafana
+    app.kubernetes.io/name: grafana
+  sessionAffinity: None
+  type: NodePort

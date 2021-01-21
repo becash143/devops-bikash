@@ -1,0 +1,8 @@
+ARG CODE_VERSION=latest
+FROM amd64/openjdk:${CODE_VERSION}
+MAINTAINER bikash.bhandari@clusus.com
+RUN useradd -ms /bin/bash myapp
+USER myapp
+WORKDIR /usr/local/bin/myapp
+COPY target/assignment-*.jar /usr/local/bin/myapp/
+CMD java -jar -Dspring.profiles.active=h2 assignment-*.jar
