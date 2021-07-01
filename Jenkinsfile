@@ -2,23 +2,31 @@ pipeline {
     agent any
 
     tools {
-        maven 'maven'
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "M3"
     }
+
     stages {
-        stage("gitlab clone") {
-            steps{
-                git credentialsId: url: 'https://github.com/becash143/devops-bikash.git'
+        stage('Build') {
+            steps {
+                // Get some code from a GitHub repository
+                git 'git@github.com:becash143/devops-bikash.git'
+
+                // Run Maven on a Unix agent.
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+
+                // To run Maven on a Windows agent, use
+                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
+            }
+
+            post {
+                // If Maven was able to run the tests, even if some of the test
+                // failed, record the test results and archive the jar file.
+                success {
+                    junit '**/target/surefire-reports/TEST-*.xml'
+                    archiveArtifacts 'target/*.jar'
+                }
             }
         }
-    stage ("compile") {
-        steps{
-            sh 'mvn clean install'
-        }
-    }
-    stage ("artifact"){
-    steps{
-        archiveArtifacts artifacts: 'assignment/*.jar', followSymlinks: false
-    }        
-    }
     }
 }
