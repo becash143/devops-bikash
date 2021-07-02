@@ -1,26 +1,13 @@
 pipeline {
-agent any
-stages {
-stage ('Compile Stage') {
-steps {
-withMaven(maven : 'maven') {
-sh'mvn clean compile'
-}
-}
-}
-stage ('Testing Stage') {
-steps {
-withMaven(maven : 'maven') {
-sh'mvn test'
-}
-}
-}
-stage ('Install Stage') {
-steps {
-withMaven(maven : 'maven') {
-sh'mvn install'
-}
-}
-}
-}
+    agent any
+    tools {
+        maven 'apache-maven-3.3.9'
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+    }
 }
