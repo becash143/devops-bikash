@@ -1,24 +1,30 @@
 pipeline {
-    agent any
-
-    tools {
-        maven 'maven'
+    agent {
+        docker {
+            image 'maven:3-alpine' 
+            args '-v /root/.m2:/root/.m2' 
+        }
     }
     stages {
-        stage("gitlab clone") {
-            steps{
-                git credentialsId: url: 'https://github.com/becash143/devops-bikash.git'
+        stage('Build') { 
+            steps {
+                sh 'mvn -B -DskipTests clean package' 
             }
         }
-    stage ("compile") {
-        steps{
-            sh 'mvn clean install'
+        stage('Test') {
+            steps {
+                sh 'mvn test'
+            }
+            post {
+                always {
+                    junit 'target/surefire-reports/*.xml'
+                }
+            }
         }
-    }
-    stage ("artifact"){
-    steps{
-        archiveArtifacts artifacts: 'assignment/*.jar', followSymlinks: false
-    }        
-    }
+        stage('Deliver') {
+            steps {
+                sh './jenkins/scripts/deliver.sh'
+            }
+        }
     }
 }
