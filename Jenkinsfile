@@ -1,24 +1,23 @@
 pipeline {
     agent any
-
-    tools {
-        maven 'maven'
+    tools { 
+        maven 'Maven 3.3.9' 
+        jdk 'jdk8' 
     }
     stages {
-        stage("gitlab clone") {
-            steps{
-                git 'git@github.com:becash143/devops-bikash.git'
+        stage ('Initialize') {
+            steps {
+                sh '''
+                    echo "PATH = ${PATH}"
+                    echo "M2_HOME = ${M2_HOME}"
+                ''' 
             }
         }
-    stage ("compile") {
-        steps{
-            sh 'mvn compile'
+
+        stage ('Build') {
+            steps {
+                echo 'This is a minimal pipeline.'
+            }
         }
-    }
-    stage ("artifact"){
-    steps{
-        archiveArtifacts artifacts: 'assignment/*.jar', followSymlinks: false
-    }        
-    }
     }
 }
