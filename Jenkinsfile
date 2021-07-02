@@ -85,23 +85,6 @@ pipeline
        }
      }
 
-    stage('Sanity check')
-     {
-      steps
-       {
-        script
-         {
-          if (isUnix()) 
-           {
-            sh 'mvn --batch-mode checkstyle:checkstyle pmd:pmd pmd:cpd com.github.spotbugs:spotbugs-maven-plugin:spotbugs'
-           }
-          else
-           {
-            bat 'mvn --batch-mode checkstyle:checkstyle pmd:pmd pmd:cpd com.github.spotbugs:spotbugs-maven-plugin:spotbugs'
-           }
-         }
-       }
-     }
 
     stage('Packaging')
      {
