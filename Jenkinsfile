@@ -60,32 +60,6 @@ pipeline
        }
      }
 
-    stage('UnitTests')
-     {
-      steps
-       {
-        script
-         {
-          if (isUnix()) 
-           {
-            sh 'mvn --batch-mode resources:testResources compiler:testCompile surefire:test'
-           }
-          else
-           {
-            bat 'mvn --batch-mode resources:testResources compiler:testCompile surefire:test'
-           }
-         }
-       }
-      post
-       {
-        always
-         {
-          junit testResults: 'target/surefire-reports/*.xml'
-         }
-       }
-     }
-
-
     stage('Packaging')
      {
       steps
