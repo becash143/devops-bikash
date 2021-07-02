@@ -7,7 +7,7 @@ pipeline {
     stages {
         stage("gitlab clone") {
             steps{
-                git credentialsId: url: 'https://github.com/becash143/devops-bikash.git'
+                git 'git@github.com:becash143/devops-bikash.git'
             }
         }
     stage ("compile") {
